@@ -439,7 +439,7 @@ button.next-btn:hover::after {
   opacity: 0.8;
 }
 
-/* Footer elegante */
+/* Footer */
 footer {
   text-align: center;
   padding: 2rem 1rem;
@@ -449,7 +449,7 @@ footer {
   background: var(--glass-bg);
   backdrop-filter: blur(12px);
   border: 1px solid rgba(255, 255, 255, 0.8);
-  border-radius: var(--card-radius) var(--card-radius) 0 0;
+  border-radius: var(--card-radius);
   box-shadow: 0 -10px 30px rgba(0, 0, 0, 0.05);
   max-width: calc(100% - 3rem);
   width: 90%;
@@ -464,7 +464,7 @@ footer::before {
   right: 0;
   height: 4px;
   background: linear-gradient(to right, var(--accent-lilac), var(--accent-lavender));
-  border-radius: var(--card-radius) var(--card-radius) 0 0;
+  border-radius: var(--card-radius) ;
 }
 
 .app-version {
