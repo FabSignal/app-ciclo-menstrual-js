@@ -1,3 +1,19 @@
+// Array de objetos : ciclos con carga inicial desde localStorage
+let ciclos = JSON.parse(localStorage.getItem('ciclos')) || [
+    {
+        id: 1,
+        fecha: "2025-01-01",
+        duracion: 5,
+        sintomas: "Dolor leve, Hinchazón"
+    },
+    {
+        id: 2,
+        fecha: "2025-01-28",
+        duracion: 6,
+        sintomas: "Dolor de cabeza"
+    }
+]
+
 document.addEventListener('DOMContentLoaded', function() {
   const form = document.getElementById('form-ciclo');
   const formCards = document.querySelectorAll('.form-card');
@@ -43,18 +59,27 @@ document.addEventListener('DOMContentLoaded', function() {
   form.addEventListener('submit', function(e) {
     e.preventDefault();
     
-    const startDate = document.getElementById('fecha').value;
-    const duration = document.getElementById('duracion').value;
-    const symptoms = document.getElementById('sintomas').value;
+    const fecha = document.getElementById('fecha').value;
+    const duracion = parseInt(document.getElementById('duracion').value);
+    const sintomas = document.getElementById('sintomas').value;
     
+
+    // Asignación del nuevo ciclo
+    const nuevoCiclo = {
+    id: ciclos.length + 1, // Se incrementa el id en 1 cuando hay un ingreso
+    fecha,
+    duracion,
+    sintomas
+    };
+
     // Crear nuevo elemento de ciclo
     const listItem = document.createElement('li');
     listItem.innerHTML = `
       <div>
-        <div class="cycle-date">${formatDate(startDate)}</div>
-        <div class="cycle-symptoms">${symptoms || 'Sin síntomas registrados'}</div>
+        <div class="cycle-date">${formatDate(fecha)}</div>
+        <div class="cycle-symptoms">${sintomas || 'Sin síntomas registrados'}</div>
       </div>
-      <div class="cycle-duration">${duration} días</div>
+      <div class="cycle-duration">${duracion} días</div>
     `;
     
     // Eliminar estado vacío si existe
@@ -62,9 +87,42 @@ document.addEventListener('DOMContentLoaded', function() {
       cycleList.removeChild(emptyState);
     }
     
+    //Mostrar los ciclos ordenados por fecha
+    const ciclosOrdenados = [...ciclos].sort((a, b) => new Date(a.fecha) - new Date(b.fecha));
+
     // Agregar nuevo ciclo a la lista
     cycleList.insertBefore(listItem, cycleList.firstChild);
     
+    // Mostrar ciclos guardados por defecto como ejemplo
+  function mostrarCiclos() {
+    cycleList.innerHTML = '';
+    
+    if (ciclos.length === 0) {
+      cycleList.appendChild(emptyState.cloneNode(true));
+      return;
+    }
+    
+    // Ordenar por fecha (más reciente primero)
+    const ciclosOrdenados = [...ciclos].sort((a, b) => 
+      new Date(b.fecha) - new Date(a.fecha)
+    );
+    
+    ciclosOrdenados.forEach(ciclo => {
+      const listItem = document.createElement('li');
+      listItem.innerHTML = `
+        <div>
+          <div class="cycle-date">${formatDate(ciclo.fecha)}</div>
+          <div class="cycle-symptoms">${ciclo.sintomas || 'Sin síntomas registrados'}</div>
+        </div>
+        <div class="cycle-duration">${ciclo.duracion} días</div>
+      `;
+      cycleList.appendChild(listItem);
+    });
+  }
+  
+    // Cargar ciclos al iniciar
+    mostrarCiclos();
+
     // Resetear formulario
     form.reset();
     updateStep(0);
