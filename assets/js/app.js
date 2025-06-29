@@ -1,4 +1,36 @@
-// Array de objetos : ciclos con carga inicial desde localStorage
+/* ======================= SALUDO INICIAL ====================== */
+// Se guarda el nombre de la usuaria(almacenado en localStorage) en la variable nombreUsuaria. Si no existe, se guarda null.
+let nombreUsuaria = localStorage.getItem("nombre");
+/* - Si no hay ningún nombre guardado, se muestra un prompt() para preguntarle a la usuaria su nombre
+- Se guarda ese valor en la variable nombreIngresado*/
+if (nombreUsuaria === null || nombreUsuaria.trim() === '') {
+  const nombreIngresado = prompt("¡Hola! ¿Cómo te llamás?");
+
+// -Si se ingresa un nombre (o algún caracter), el valor almacenado en la variable nombreUsuaria se guarda en localStorage con la key "nombre"
+// -Se verifica que el valor ingresado no sea null ni vacío
+  if (nombreIngresado && nombreIngresado.trim() !== "") {
+    nombreUsuaria = nombreIngresado.trim(); // .trim(): limpia espacios
+    localStorage.setItem("nombre", nombreUsuaria);
+  } else {
+    // Si no se ingresa un nombre válido (canceló o dejó vacío), se evita que aparezca null en el título, se asigna una cadena vacía a nombreUsuaria
+    nombreUsuaria = ""; 
+  }
+}
+// Saludo
+const saludo = nombreUsuaria && nombreUsuaria.trim() !== ""
+  ? `¡Hola ${nombreUsuaria}! ¿Cómo te sentís hoy?`
+  : "¡Hola! ¿Cómo te sentís hoy?";
+
+// Se modifica el título para que muestre el nombre de la usuaria, si lo ingSresa
+const titulo = document.querySelector("header h1");
+titulo.innerHTML = `<span class="icon"><img src="./assets/img/luna.png" alt="Luna" class="icon-img"></span> ${saludo}`;
+
+// Para limpiar el valor guardado:
+//localStorage.removeItem("nombre");
+
+// ======= Simulación de base de datos con un array ================
+// Array de objetos : ciclos . Si hay datos en localStorage, se usan. En caso contrario, se muestran los valores por defecto
+
 let ciclos = JSON.parse(localStorage.getItem('ciclos')) || [
     {
         id: 1,
@@ -14,6 +46,8 @@ let ciclos = JSON.parse(localStorage.getItem('ciclos')) || [
     }
 ]
 
+let ciclosPrecargados = true; // Indica si solo se están mostrando ciclos por defecto
+
 document.addEventListener('DOMContentLoaded', function() {
   const form = document.getElementById('form-ciclo');
   const formCards = document.querySelectorAll('.form-card');
@@ -22,6 +56,9 @@ document.addEventListener('DOMContentLoaded', function() {
   const indicatorDots = document.querySelectorAll('.indicator-dot');
   const cycleList = document.getElementById('lista-ciclos');
   const emptyState = document.querySelector('.empty-state');
+
+  // Cargar ciclos al iniciar
+  mostrarCiclos();
   
   let currentStep = 0;
   
@@ -55,32 +92,39 @@ document.addEventListener('DOMContentLoaded', function() {
     });
   });
   
-  // Manejar envío del formulario
+  // Envío del formulario
   form.addEventListener('submit', function(e) {
-    e.preventDefault();
+    e.preventDefault(); // Evita que el formulario recargue la página
     
+    // Se obtienen los valores ingresados por la usuaria
     const fecha = document.getElementById('fecha').value;
     const duracion = parseInt(document.getElementById('duracion').value);
     const sintomas = document.getElementById('sintomas').value;
     
-
-    // Asignación del nuevo ciclo
+    // Se crea un nuevo objeto con el nuevo ciclo ingresado
     const nuevoCiclo = {
-    id: ciclos.length + 1, // Se incrementa el id en 1 cuando hay un ingreso
+    id: ciclos[ciclos.length - 1]?.id + 1 || 1, // ID autoincremental
+    //id: ciclos.length + 1, // Se incrementa el id en 1 cuando hay un ingreso
     fecha,
     duracion,
     sintomas
     };
 
     // Crear nuevo elemento de ciclo
-    const listItem = document.createElement('li');
+    /* const listItem = document.createElement('li');
     listItem.innerHTML = `
       <div>
         <div class="cycle-date">${formatDate(fecha)}</div>
         <div class="cycle-symptoms">${sintomas || 'Sin síntomas registrados'}</div>
       </div>
       <div class="cycle-duration">${duracion} días</div>
-    `;
+    `; */
+
+    // Se agrega el nuevo ciclo al array
+    ciclos.push(nuevoCiclo);
+
+    // Se actualiza ciclosPrecargados para avisar que ya no están disponibles solo los ciclos de prueba
+    ciclosPrecargados = false;
     
     // Eliminar estado vacío si existe
     if (emptyState && cycleList.contains(emptyState)) {
@@ -90,46 +134,51 @@ document.addEventListener('DOMContentLoaded', function() {
     //Mostrar los ciclos ordenados por fecha
     const ciclosOrdenados = [...ciclos].sort((a, b) => new Date(a.fecha) - new Date(b.fecha));
 
-    // Agregar nuevo ciclo a la lista
-    cycleList.insertBefore(listItem, cycleList.firstChild);
-    
-    // Mostrar ciclos guardados por defecto como ejemplo
-  function mostrarCiclos() {
-    cycleList.innerHTML = '';
-    
-    if (ciclos.length === 0) {
-      cycleList.appendChild(emptyState.cloneNode(true));
-      return;
-    }
-    
-    // Ordenar por fecha (más reciente primero)
-    const ciclosOrdenados = [...ciclos].sort((a, b) => 
-      new Date(b.fecha) - new Date(a.fecha)
-    );
-    
-    ciclosOrdenados.forEach(ciclo => {
-      const listItem = document.createElement('li');
-      listItem.innerHTML = `
-        <div>
-          <div class="cycle-date">${formatDate(ciclo.fecha)}</div>
-          <div class="cycle-symptoms">${ciclo.sintomas || 'Sin síntomas registrados'}</div>
-        </div>
-        <div class="cycle-duration">${ciclo.duracion} días</div>
-      `;
-      cycleList.appendChild(listItem);
-    });
-  }
-  
     // Cargar ciclos al iniciar
     mostrarCiclos();
 
-    // Resetear formulario
+    // Resetear formulario (Se vuelve al primer paso)
     form.reset();
     updateStep(0);
     
     // Mostrar animación de éxito
     showSuccessAnimation();
   });
+
+    // Mostrar ciclos guardados como ejemplo
+  function mostrarCiclos() {
+    // Se limpia el contenido anterior de la lista (por si ya hay ciclos)
+  cycleList.innerHTML = '';
+
+  // Si no hay ciclos nuevos agregados por la usuaria (es decir, solo están los precargados)
+  // se muestra el "estado vacío" como indicación visual. Esto se controla con la variable ciclosPrecargados.
+  if (ciclos.length === 0 || ciclosPrecargados) {
+    cycleList.appendChild(emptyState.cloneNode(true));
+  }
+
+  // Se ordena el array de ciclos por fecha (de más reciente a más antiguo)
+  // Se usa el spread operator (...) para copiar el array original,
+  // de modo que no se modifique directamente la variable ciclos
+  const ciclosOrdenados = [...ciclos].sort((a, b) =>
+    new Date(b.fecha) - new Date(a.fecha)
+  );
+
+  // Se recorre cada ciclo del array ordenado y lo inserta como lista en el HTML
+  ciclosOrdenados.forEach(ciclo => {
+    const listItem = document.createElement('li');
+
+    // Se le agrega contenido HTML con los datos del ciclo, incluyendo la fecha formateada
+    listItem.innerHTML = `
+      <div>
+        <div class="cycle-date">${formatDate(ciclo.fecha)}</div>
+        <div class="cycle-symptoms">${ciclo.sintomas || 'Sin síntomas registrados'}</div>
+      </div>
+      <div class="cycle-duration">${ciclo.duracion} días</div>
+    `;
+    // Se inserta la lista en el DOM
+    cycleList.appendChild(listItem);
+  });
+}
   
   // Función para formatear fechas
   function formatDate(dateString) {

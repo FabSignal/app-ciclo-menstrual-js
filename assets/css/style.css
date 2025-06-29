@@ -167,8 +167,7 @@ h2 {
   gap: 1rem;
 }
 
-/* Íconos mejorados */
-.icon {
+/* .icon {
   display: inline-flex;
   justify-content: center;
   align-items: center;
@@ -180,13 +179,21 @@ h2 {
   font-size: 1.2rem;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
   transition: var(--transition-smooth);
+} */
+
+.icon-img {
+  width: 60px;          
+  height: 60px;        
+  object-fit: contain;  
+  vertical-align: middle; 
+  margin-right: 8px;    
 }
 
 h2:hover .icon {
   transform: rotate(10deg) scale(1.1);
 }
 
-/* Formulario optimizado */
+/* Formulario */
 .multi-step-form {
   position: relative;
   height: 350px;
