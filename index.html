@@ -3,24 +3,24 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>App Ciclo Menstrual | Diseño Elegante</title>
+  <title>App Ciclo Menstrual</title>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <link rel="stylesheet" href="./assets/css/style.css">
 </head>
 <body>
   <header>
-    <h1><span class="icon"><i class="fas fa-moon"></i></span> ¡Hola 'nombre'!¿Cómo te sentís hoy?</h1>
+    <h1><span class="icon"><img src="./assets/img/luna.png" alt="Luna" class="icon-img"></span> ¡Hola 'nombre'!¿Cómo te sentís hoy?</h1>
     <p class="subtitle">Cuidarte empieza por conocerte. ¡Registrá tu ciclo!</p>
   </header>
 
   <main>
     <div class="card-container">
       <section class="card">
-        <h2><span class="icon"><i class="fas fa-calendar-plus"></i></span> Nuevo ciclo</h2>
+        <h2><span class="icon"><img src="./assets/img/nuevo_ciclo.png" alt="Nuevo ciclo" class="icon-img"></span> Nuevo ciclo</h2>
         <form id="form-ciclo" class="multi-step-form">
           <div class="form-card active">
             <div class="form-group">
-              <label for="fecha"><i class="fas fa-calendar-day"></i> Fecha de inicio</label>
+              <label for="fecha"><img src="./assets/img/calendario.png" alt="Calendario" class="icon-img"> Fecha de inicio</label>
               <input type="date" id="fecha" required />
             </div>
             <div class="btn-container">
@@ -35,7 +35,7 @@
 
           <div class="form-card">
             <div class="form-group">
-              <label for="duracion"><i class="fas fa-clock"></i> Duración (días)</label>
+              <label for="duracion"><img src="./assets/img/reloj.png" alt="Reloj" class="icon-img"> Duración (días)</label>
               <input type="number" id="duracion" min="1" max="15" required />
             </div>
             <div class="btn-container">
@@ -51,8 +51,8 @@
 
           <div class="form-card">
             <div class="form-group">
-              <label for="sintomas"><i class="fas fa-heartbeat"></i> Síntomas (opcional)</label>
-              <textarea id="sintomas" rows="3" placeholder="Describe cómo te sentiste..."></textarea>
+              <label for="sintomas"><img src="./assets/img/sintomas.png" alt="Síntomas" class="icon-img"> Síntomas (opcional)</label>
+              <textarea id="sintomas" rows="3" placeholder="Describí cómo te sentiste..."></textarea>
             </div>
             <div class="btn-container">
               <button type="button" class="prev-btn"><i class="fas fa-arrow-left"></i> Anterior</button>
@@ -68,10 +68,10 @@
       </section>
 
       <section class="card">
-        <h2><span class="icon"><i class="fas fa-history"></i></span> Mis ciclos registrados</h2>
+        <h2><span class="icon"><img src="./assets/img/gota.png" alt="Ciclos registrados" class="icon-img"></i></span> Mis ciclos registrados</h2>
         <ul id="lista-ciclos">
           <div class="empty-state">
-            <i class="fas fa-clipboard-list"></i>
+            <img src="./assets/img/agenda.png" alt="Registro" class="icon-img">
             <h3>Aún no tenés ciclos registrados</h3>
             <p>Comenzá agregando tu primer ciclo menstrual usando el formulario</p>
           </div>
