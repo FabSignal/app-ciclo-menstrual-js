@@ -1,4 +1,10 @@
 /* ======================= SALUDO INICIAL ====================== */
+/* 
+- Se solicita el nombre de la usuaria si no hay ninguno guardado
+- El nombre se guarda en localStorage para persistencia
+- Se muestra un saludo personalizado con su nombre si está disponible
+ */
+
 // Se guarda el nombre de la usuaria(almacenado en localStorage) en la variable nombreUsuaria. Si no existe, se guarda null.
 let nombreUsuaria = localStorage.getItem("nombre");
 /* - Si no hay ningún nombre guardado, se muestra un prompt() para preguntarle a la usuaria su nombre
@@ -25,56 +31,60 @@ const saludo = nombreUsuaria && nombreUsuaria.trim() !== ""
 const titulo = document.querySelector("header h1");
 titulo.innerHTML = `<span class="icon"><img src="./assets/img/luna.png" alt="Luna" class="icon-img"></span> ${saludo}`;
 
-// Para limpiar el valor guardado:
-//localStorage.removeItem("nombre");
+// Para limpiar el valor guardado desde la consola:
+//localStorage.clear();
 
-// ======= Simulación de base de datos con un array ================
-// Array de objetos : ciclos . Si hay datos en localStorage, se usan. En caso contrario, se muestran los valores por defecto
+/*  ============= Simulación de base de datos con un array ================ */
+/* 
+-Se define un array con objetos de ejemplo representando ciclos
+-Se usa la variable ciclosPrecargados para distinguir si se están mostrando estos datos de ejemplo 
+*/
 
-let ciclos = JSON.parse(localStorage.getItem('ciclos')) || [
+let ciclos = [
     {
         id: 1,
         fecha: "2025-01-01",
         duracion: 5,
-        sintomas: "Dolor leve, Hinchazón"
+        sintomas: "Dolor abdominal, Hinchazón, Fatiga"
     },
     {
         id: 2,
         fecha: "2025-01-28",
         duracion: 6,
-        sintomas: "Dolor de cabeza"
+        sintomas: "Dolor de cabeza, Cólicos, Dolor de espalda"
     }
 ]
 
 let ciclosPrecargados = true; // Indica si solo se están mostrando ciclos por defecto
 
 document.addEventListener('DOMContentLoaded', function() {
+  // Elementos del DOM relacionados al formulario por pasos
   const form = document.getElementById('form-ciclo');
-  const formCards = document.querySelectorAll('.form-card');
-  const nextButtons = document.querySelectorAll('.next-btn');
-  const prevButtons = document.querySelectorAll('.prev-btn');
-  const indicatorDots = document.querySelectorAll('.indicator-dot');
-  const cycleList = document.getElementById('lista-ciclos');
-  const emptyState = document.querySelector('.empty-state');
+  const formCards = document.querySelectorAll('.form-card'); // Tarjetas del form
+  const nextButtons = document.querySelectorAll('.next-btn'); // Botones siguiente
+  const prevButtons = document.querySelectorAll('.prev-btn'); // Botones Anterior
+  const indicatorDots = document.querySelectorAll('.indicator-dot'); // Puntos para pasar de tarjeta
+  const cycleList = document.getElementById('lista-ciclos'); // Lista donde se muestran los ciclos
+  const emptyState = document.querySelector('.empty-state'); // Tarjeta que indica que no se han ingresado ciclos ( de estado vacío)
 
-  // Cargar ciclos al iniciar
+  // Se cargan los ciclos existentes al iniciar la página
   mostrarCiclos();
   
-  let currentStep = 0;
+  let currentStep = 0; // Paso actual del formulario
   
-  // Función para actualizar el paso del formulario
+  // Función para cambiar de tarjeta en el formulario por pasos
   function updateStep(newStep) {
-    // Ocultar tarjeta actual
+    // Se oculta tarjeta actual
     formCards[currentStep].classList.remove('active');
     indicatorDots[currentStep].classList.remove('active');
     
-    // Mostrar nueva tarjeta
+    // Se muestra una tarjeta nueva 
     currentStep = newStep;
     formCards[currentStep].classList.add('active');
     indicatorDots[currentStep].classList.add('active');
   }
   
-  // Event listeners para botones Siguiente
+  // Event listeners para cambiar de tarjeta al hacer click en botones Siguiente
   nextButtons.forEach(button => {
     button.addEventListener('click', function() {
       if (currentStep < formCards.length - 1) {
@@ -83,7 +93,7 @@ document.addEventListener('DOMContentLoaded', function() {
     });
   });
   
-  // Event listeners para botones Anterior
+  // Event listeners para volver atrás al hacer click en botones Anterior
   prevButtons.forEach(button => {
     button.addEventListener('click', function() {
       if (currentStep > 0) {
@@ -92,79 +102,86 @@ document.addEventListener('DOMContentLoaded', function() {
     });
   });
   
+/* ========== Registro de datos ingresados mediante el formulario ========== */
+/* 
+// Se obtiene la información ingresada (fecha, duración, síntomas)
+// Se crea un nuevo objeto y se agrega al array ciclos
+// Se eliminan los ciclos de de ejemplo y se actualiza la lista con los nuevos datos
+*/
+
   // Envío del formulario
   form.addEventListener('submit', function(e) {
-    e.preventDefault(); // Evita que el formulario recargue la página
+    e.preventDefault(); // Evita que se recargue la página
     
-    // Se obtienen los valores ingresados por la usuaria
+    // Se obtienen los valores ingresados por la usuaria en el formulario
     const fecha = document.getElementById('fecha').value;
     const duracion = parseInt(document.getElementById('duracion').value);
     const sintomas = document.getElementById('sintomas').value;
     
-    // Se crea un nuevo objeto con el nuevo ciclo ingresado
+    // Se eliminan los ciclos de muestra al agregar el primer ciclo real
+    if (ciclosPrecargados) {
+    ciclos = []; // Se eliminan todos los ciclos actuales (los de ejemplo)
+    ciclosPrecargados = false; // Evita que esto vuelva a ejecutarse
+  }
+
+    // Se crea un nuevo objeto con los nuevos datos ingresados del ciclo 
     const nuevoCiclo = {
     id: ciclos[ciclos.length - 1]?.id + 1 || 1, // ID autoincremental
-    //id: ciclos.length + 1, // Se incrementa el id en 1 cuando hay un ingreso
     fecha,
     duracion,
     sintomas
     };
 
-    // Crear nuevo elemento de ciclo
-    /* const listItem = document.createElement('li');
-    listItem.innerHTML = `
-      <div>
-        <div class="cycle-date">${formatDate(fecha)}</div>
-        <div class="cycle-symptoms">${sintomas || 'Sin síntomas registrados'}</div>
-      </div>
-      <div class="cycle-duration">${duracion} días</div>
-    `; */
-
     // Se agrega el nuevo ciclo al array
     ciclos.push(nuevoCiclo);
 
-    // Se actualiza ciclosPrecargados para avisar que ya no están disponibles solo los ciclos de prueba
+    // Se actualiza ciclosPrecargados para avisar que ya no deben mostrarse solo los ciclos de prueba
     ciclosPrecargados = false;
     
-    // Eliminar estado vacío si existe
+    // Si la tarjeta de estado vacío está visible, se remueve
     if (emptyState && cycleList.contains(emptyState)) {
       cycleList.removeChild(emptyState);
     }
-    
-    //Mostrar los ciclos ordenados por fecha
-    const ciclosOrdenados = [...ciclos].sort((a, b) => new Date(a.fecha) - new Date(b.fecha));
 
-    // Cargar ciclos al iniciar
+    // Se vuelve a mostrar la lista actualizada
     mostrarCiclos();
 
-    // Resetear formulario (Se vuelve al primer paso)
+    // Se resetea el formulario y se vuelve al primer paso
     form.reset();
     updateStep(0);
     
-    // Mostrar animación de éxito
+    // Se muestra animación de éxito de carga de datos
     showSuccessAnimation();
   });
 
-    // Mostrar ciclos guardados como ejemplo
-  function mostrarCiclos() {
-    // Se limpia el contenido anterior de la lista (por si ya hay ciclos)
-  cycleList.innerHTML = '';
-
-  // Si no hay ciclos nuevos agregados por la usuaria (es decir, solo están los precargados)
-  // se muestra el "estado vacío" como indicación visual. Esto se controla con la variable ciclosPrecargados.
-  if (ciclos.length === 0 || ciclosPrecargados) {
-    cycleList.appendChild(emptyState.cloneNode(true));
+    // Función para ordenar ciclos por fecha (más reciente primero)
+    function ordenarCiclosPorFechaDesc(array) {
+    return [...array].sort((a, b) => new Date(b.fecha) - new Date(a.fecha));
   }
 
-  // Se ordena el array de ciclos por fecha (de más reciente a más antiguo)
-  // Se usa el spread operator (...) para copiar el array original,
-  // de modo que no se modifique directamente la variable ciclos
-  const ciclosOrdenados = [...ciclos].sort((a, b) =>
-    new Date(b.fecha) - new Date(a.fecha)
-  );
+  /* ========== Mostrar ciclos dinámicamente en el DOM ========== */
+  /* 
+  - Se limpia la lista previa y se agregan los ciclos ordenados por fecha
+  - Se usa una función para formatear fechas en español
+  */
 
-  // Se recorre cada ciclo del array ordenado y lo inserta como lista en el HTML
-  ciclosOrdenados.forEach(ciclo => {
+  // Función para mostrar los datos de los ciclos en pantalla
+  function mostrarCiclos() {
+    // Se limpia el contenido anterior de la lista (por si ya hay ciclos)
+    cycleList.innerHTML = '';
+
+  // Si no hay ciclos nuevos agregados por la usuaria (es decir, solo están los precargados)
+  // se muestra el estado vacío como indicación visual. Esto se controla con la variable ciclosPrecargados.
+    if (ciclos.length === 0 || ciclosPrecargados) {
+      cycleList.appendChild(emptyState.cloneNode(true));
+    }
+
+  // Se ordena el array de ciclos por fecha usando la función ordenarCiclosPorFechaDesc y se guarda en ciclosOrdenados
+    const ciclosOrdenados = ordenarCiclosPorFechaDesc(ciclos);
+
+
+  // Se recorre cada ciclo del array ordenado y cada uno se inserta como lista en el HTML
+    ciclosOrdenados.forEach(ciclo => {
     const listItem = document.createElement('li');
 
     // Se le agrega contenido HTML con los datos del ciclo, incluyendo la fecha formateada
@@ -180,13 +197,18 @@ document.addEventListener('DOMContentLoaded', function() {
   });
 }
   
-  // Función para formatear fechas
+  // Función para mostrar fechas en español 
   function formatDate(dateString) {
     const options = { year: 'numeric', month: 'long', day: 'numeric' };
     return new Date(dateString).toLocaleDateString('es-ES', options);
   }
   
-  // Mostrar animación de éxito
+  /* ========== Mostrar notificación animada al guardar un ciclo ========== */
+  /* 
+  - Se crea una notificación (toast) con estilos
+  - Se elimina automáticamente después de unos segundos  */
+
+  // Se muestra animación cuando se guarda un ciclo con éxito
   function showSuccessAnimation() {
     const successMsg = document.createElement('div');
     successMsg.style.cssText = `
@@ -217,6 +239,7 @@ document.addEventListener('DOMContentLoaded', function() {
     
     document.body.appendChild(successMsg);
     
+    // Se remueve animación después de 3.6 segundos
     setTimeout(() => {
       if (successMsg.parentNode === document.body) {
         document.body.removeChild(successMsg);
@@ -224,7 +247,7 @@ document.addEventListener('DOMContentLoaded', function() {
     }, 3600);
   }
   
-  // Agregar estilos de animación dinámicamente
+  // Se agregan estilos de animación para el mensaje de éxito de carga de de ciclo
   const style = document.createElement('style');
   style.textContent = `
     @keyframes slideIn {
