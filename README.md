@@ -1,58 +1,117 @@
-# 🌸 App Registro de Ciclo Menstrual
+# 🌙 App de Registro de Ciclos Menstruales
 
-Aplicación web desarrollada con JavaScript puro para registrar, visualizar y predecir el ciclo menstrual de forma **privada, sin conexión y sin cuentas**. Todos los datos son almacenados en el navegador del usuario utilizando `localStorage`, ofreciendo una alternativa ética, ligera y accesible a las apps tradicionales de salud.
-
----
-
-## 🎯 Objetivo
-
-Brindar una herramienta funcional para el seguimiento del ciclo menstrual, enfocada en la **autonomía, privacidad y simplicidad de uso**, sin necesidad de conexión a internet, cuentas de usuario ni transferencia de datos personales.
+Una aplicación web interactiva construida con HTML, CSS y JavaScript, pensada para acompañarte en el seguimiento de tu ciclo menstrual de forma simple, amigable y privada.
 
 ---
 
-## ⚙️ Funcionalidades técnicas
+## 🩸 ¿Qué podés hacer con esta app?
 
-La aplicación fue desarrollada utilizando **JavaScript **, con un enfoque modular y sin frameworks, aprovechando el almacenamiento local del navegador para mantener la privacidad del usuario.
-
-### 🧩 Funcionalidades clave implementadas:
-
-- **Estructura de datos con arrays y objetos**  
-  Cada ciclo menstrual se representa como un objeto con identificador, fecha de inicio, duración e información de síntomas. Los ciclos se almacenan en un array que actúa como base de datos local simulada.
-
-- **Interfaz dinámica con manipulación del DOM**  
-  La lista de ciclos registrados se actualiza en tiempo real al enviar el formulario, utilizando `createElement()` e `innerHTML` para renderizar el historial.
-
-- **Formulario interactivo**  
-  Permite al usuario ingresar información sobre su ciclo, con validaciones mínimas y eventos controlados mediante `addEventListener()` y `event.preventDefault()`.
-
-- **Persistencia con localStorage**  
-  La aplicación guarda tanto el historial de ciclos como el nombre del usuario usando `localStorage`, aplicando `JSON.stringify()` y `JSON.parse()` para mantener los datos entre sesiones.
-
-- **Predicción del próximo ciclo**  
-  Se calcula automáticamente la fecha estimada del próximo ciclo en base al promedio de intervalos anteriores, y se muestra de forma destacada. También se notifica si el último ciclo está atrasado.
+- Ingresar la **fecha de inicio** de tu ciclo.
+- Registrar la **duración del sangrado** (en días).
+- Anotar los **síntomas** que experimentaste (dolores, molestias, etc.).
+- Ver todos los ciclos registrados en orden del más reciente al más antiguo.
+- Recibir una **notificación animada** al guardar un nuevo ciclo.
+- Ver un saludo personalizado con tu nombre cada vez que abrís la app.
 
 ---
 
-## 🧪 Cómo usar la aplicación
+## 🎯 Tecnologías utilizadas
 
-1. Al ingresar, la usuaria es saludada por su nombre (si ya fue guardado anteriormente).
-2. Se completa el formulario con:
-   - Fecha de inicio del ciclo
-   - Duración del sangrado (en días)
-   - Síntomas (opcional)
-3. Cada nuevo ciclo se guarda localmente y se visualiza en una lista ordenada por fecha.
-4. La app estima la fecha del próximo ciclo y alerta si hay un retraso notable.
+- ✅ HTML5 
+- ✅ CSS3 
+- ✅ JavaScript (sin frameworks)
+
+## 📁 Estructura del proyecto
+
+```
+app-ciclo-menstrual-js/
+├── index.html
+├── README.md
+└── assets/
+    ├── img/   # Imágenes utilizadas
+    ├── css/
+    │   └── style.css
+    └── js/
+        └── app.js
+```
+
+## ⚙️ Funcionalidades técnicas destacadas
+
+- **Simulación de una base de datos** con un array de objetos.
+- **Formulario por pasos** dividido en tarjetas animadas con navegación entre ellas.
+- **Uso de `localStorage`** para guardar el nombre de la usuaria y mostrar un saludo personalizado.
+- **Notificación tipo "toast"** al registrar un nuevo ciclo.
+- **Ciclos ordenados automáticamente** por fecha (del más nuevo al más viejo).
+- **HTML dinámico** generado con JavaScript para visualizar los registros.
 
 ---
+
+## 📅 Cómo usar 
+
+1. **Primer uso**:  
+   Ingresá tu nombre (se guarda automáticamente en tu navegador para futuras sesiones) 
+
+2. **Registro de ciclo**:  
+   Completá el formulario por pasos con:  
+   - Fecha de inicio  
+   - Duración del sangrado 
+   - Síntomas (opcional)  
+
+3. **Historial**:  
+   Visualizarás todos tus ciclos ordenados por fecha   
+
+---
+
+## 🌱 Características en desarrollo
+
+Esta versión inicial (MVP) está en crecimiento activo. Actualmente estamos trabajando en:
+
+- **Persistencia de ciclos**  
+  Los registros se mantienen solo durante la sesión actual  
+  *Próximamente: Almacenamiento en `localStorage` para acceso histórico*
+
+- **Gestión avanzada de registros**  
+  Por ahora no es posible editar/eliminar ciclos  
+  *Próximamente: Controles para modificar o quitar registros existentes*
+
+- **Síntomas estructurados**  
+  Campo actual: Texto libre  
+  *Próximamente: Menú desplegable con opciones comunes + campo de texto libre*
+
+- **Análisis de datos**  
+  Estadísticas básicas aún no disponibles  
+  *Próximamente: Visualización mensual de tus ciclos con indicadores claros y cálculo de promedios (duración de ciclo, días de sangrado, etc.)*
+
+---
+
+## 🔍 Cómo probarla
+
+1. Cloná el repositorio:
+
+```bash
+git clone https://github.com/tu-usuario/salud-a-mano.git
+```
+
+2. Abrí el archivo `index.html` en tu navegador.
+
+O visitá: 
+
+ https://fabsignal.github.io/app-ciclo-menstrual-js/
 
 ## 🩷 Autoría
 
 Proyecto realizado por:
 
-- **Lucía Della Madalena** - https://github.com/luciadmaddalena
+- **Lucía Della Maddalena** - https://github.com/luciadmaddalena
 
 - **Fabiana Fernández** - https://github.com/FabSignal
 
+📚 Proyecto desarrollado en contexto académico y expandido como prototipo funcional, con foco en escalabilidad y buenas prácticas.
 
+## ⚖️ Licencia
+
+Este proyecto es de uso libre con fines educativos y personales.  
+Podés adaptarlo, reusarlo o extenderlo.  
+Si lo compartís, ¡mencionanos! 💜
 
 
