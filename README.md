@@ -89,7 +89,7 @@ Esta versión inicial (MVP) está en crecimiento activo. Actualmente estamos tra
 1. Cloná el repositorio:
 
 ```bash
-git clone https://github.com/tu-usuario/salud-a-mano.git
+git clone https://github.com/FabSignal/app-ciclo-menstrual-js
 ```
 
 2. Abrí el archivo `index.html` en tu navegador.
