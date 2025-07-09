@@ -40,7 +40,7 @@ titulo.innerHTML = `<span class="icon"><img src="./assets/img/luna.png" alt="Lun
 -Se usa la variable ciclosPrecargados para distinguir si se están mostrando estos datos de ejemplo 
 */
 
-let ciclos = [
+let ciclos =  [
     {
         id: 1,
         fecha: "2025-01-01",
@@ -54,6 +54,13 @@ let ciclos = [
         sintomas: "Dolor de cabeza, Cólicos, Dolor de espalda"
     }
 ]
+
+localStorage.setItem("ciclos" , JSON.stringify(ciclos));
+
+const ciclosGuardados = localStorage.getItem("ciclos");
+if (ciclosGuardados) {
+  ciclos = JSON.parse(ciclosGuardados); // Se parsea el string a un array de objetos
+}
 
 let ciclosPrecargados = true; // Indica si solo se están mostrando ciclos por defecto
 
@@ -118,6 +125,16 @@ document.addEventListener('DOMContentLoaded', function() {
     const duracion = parseInt(document.getElementById('duracion').value);
     const sintomas = document.getElementById('sintomas').value;
     
+    // Validación simple: si no se ingresó fecha o duración, se muestra un mensaje de error
+    if (!fecha || isNaN(duracion) || duracion <= 0) {
+      alert("Por favor, completa todos los campos correctamente.");
+      return; // Detiene la ejecución si hay error
+    }
+
+
+
+
+
     // Se eliminan los ciclos de muestra al agregar el primer ciclo real
     if (ciclosPrecargados) {
     ciclos = []; // Se eliminan todos los ciclos actuales (los de ejemplo)
@@ -133,7 +150,15 @@ document.addEventListener('DOMContentLoaded', function() {
     };
 
     // Se agrega el nuevo ciclo al array
-    ciclos.push(nuevoCiclo);
+    //ciclos.push(nuevoCiclo);
+
+    localStorage.setItem("ciclos", JSON.stringify([...ciclos, nuevoCiclo])); // Se guarda el ciclo en localStorage
+
+    ciclos = JSON.parse(localStorage.getItem("ciclos")); // Se actualiza el array de ciclos desde localStorage
+
+    // Se actualiza la lista de ciclos en pantalla
+    mostrarCiclos();
+  
 
     // Se actualiza ciclosPrecargados para avisar que ya no deben mostrarse solo los ciclos de prueba
     ciclosPrecargados = false;
@@ -167,8 +192,10 @@ document.addEventListener('DOMContentLoaded', function() {
 
   // Función para mostrar los datos de los ciclos en pantalla
   function mostrarCiclos() {
+    
     // Se limpia el contenido anterior de la lista (por si ya hay ciclos)
     cycleList.innerHTML = '';
+
 
   // Si no hay ciclos nuevos agregados por la usuaria (es decir, solo están los precargados)
   // se muestra el estado vacío como indicación visual. Esto se controla con la variable ciclosPrecargados.
