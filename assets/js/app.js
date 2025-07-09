@@ -31,16 +31,18 @@ const saludo = nombreUsuaria && nombreUsuaria.trim() !== ""
 const titulo = document.querySelector("header h1");
 titulo.innerHTML = `<span class="icon"><img src="./assets/img/luna.png" alt="Luna" class="icon-img"></span> ${saludo}`;
 
-// Para limpiar el valor guardado desde la consola:
-//localStorage.clear();
+/*  ============= Simulación de base de datos con array + localStorage ================ */
 
-/*  ============= Simulación de base de datos con un array ================ */
-/* 
--Se define un array con objetos de ejemplo representando ciclos
--Se usa la variable ciclosPrecargados para distinguir si se están mostrando estos datos de ejemplo 
-*/
+let ciclos = [];
+let ciclosPrecargados = false;
 
-let ciclos =  [
+// Verificar si hay ciclos guardados en localStorage
+const ciclosGuardados = localStorage.getItem("ciclos");
+if (ciclosGuardados) {
+  ciclos = JSON.parse(ciclosGuardados);
+} else {
+  // Si no hay nada guardado, usar los ciclos de ejemplo
+  ciclos = [
     {
         id: 1,
         fecha: "2025-01-01",
@@ -53,16 +55,9 @@ let ciclos =  [
         duracion: 6,
         sintomas: "Dolor de cabeza, Cólicos, Dolor de espalda"
     }
-]
-
-localStorage.setItem("ciclos" , JSON.stringify(ciclos));
-
-const ciclosGuardados = localStorage.getItem("ciclos");
-if (ciclosGuardados) {
-  ciclos = JSON.parse(ciclosGuardados); // Se parsea el string a un array de objetos
+  ];
+  ciclosPrecargados = true;
 }
-
-let ciclosPrecargados = true; // Indica si solo se están mostrando ciclos por defecto
 
 document.addEventListener('DOMContentLoaded', function() {
   // Elementos del DOM relacionados al formulario por pasos
@@ -150,16 +145,13 @@ document.addEventListener('DOMContentLoaded', function() {
     };
 
     // Se agrega el nuevo ciclo al array
-    //ciclos.push(nuevoCiclo);
-
-    localStorage.setItem("ciclos", JSON.stringify([...ciclos, nuevoCiclo])); // Se guarda el ciclo en localStorage
-
-    ciclos = JSON.parse(localStorage.getItem("ciclos")); // Se actualiza el array de ciclos desde localStorage
+    ciclos.push(nuevoCiclo);
+    
+    localStorage.setItem("ciclos", JSON.stringify(ciclos));
 
     // Se actualiza la lista de ciclos en pantalla
     mostrarCiclos();
   
-
     // Se actualiza ciclosPrecargados para avisar que ya no deben mostrarse solo los ciclos de prueba
     ciclosPrecargados = false;
     
@@ -192,7 +184,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
   // Función para mostrar los datos de los ciclos en pantalla
   function mostrarCiclos() {
-    
+
     // Se limpia el contenido anterior de la lista (por si ya hay ciclos)
     cycleList.innerHTML = '';
 
