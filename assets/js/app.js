@@ -31,32 +31,37 @@ const saludo = nombreUsuaria && nombreUsuaria.trim() !== ""
 const titulo = document.querySelector("header h1");
 titulo.innerHTML = `<span class="icon"><img src="./assets/img/luna.png" alt="Luna" class="icon-img"></span> ${saludo}`;
 
-/*  ============= Simulación de base de datos con array + localStorage ================ */
+/* ============ Ciclos: leer de localStorage o cargar ejemplo ============ */
 
 let ciclos = [];
 let ciclosPrecargados = false;
 
 // Verificar si hay ciclos guardados en localStorage
 const ciclosGuardados = localStorage.getItem("ciclos");
+
 if (ciclosGuardados) {
+  // Si existen ciclos guardados, se cargan desde Storage
   ciclos = JSON.parse(ciclosGuardados);
 } else {
-  // Si no hay nada guardado, usar los ciclos de ejemplo
+  // Si no hay nada en Storage, se cargan ciclos de ejemplo
   ciclos = [
     {
-        id: 1,
-        fecha: "2025-01-01",
-        duracion: 5,
-        sintomas: "Dolor abdominal, Hinchazón, Fatiga"
+      id: 1,
+      fecha: "2025-01-01",
+      duracion: 5,
+      sintomas: "Dolor abdominal, Hinchazón, Fatiga"
     },
     {
-        id: 2,
-        fecha: "2025-01-28",
-        duracion: 6,
-        sintomas: "Dolor de cabeza, Cólicos, Dolor de espalda"
+      id: 2,
+      fecha: "2025-01-28",
+      duracion: 6,
+      sintomas: "Dolor de cabeza, Cólicos, Dolor de espalda"
     }
   ];
   ciclosPrecargados = true;
+
+  // se guardan los ciclos de ejemplo en localStorage para persistencia
+  localStorage.setItem("ciclos", JSON.stringify(ciclos));
 }
 
 document.addEventListener('DOMContentLoaded', function() {
